@@ -1,13 +1,24 @@
 <!DOCTYPE html>
-<html>
-  <head>
-   <link rel="stylesheet" href="../css/styles.css">
-  </head>
-  <body>
-    <div>
-      <h1>Welcome to the Attendance Tracker</h1>
-      <a href="/login">Login</a>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Church Attendance</title>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="text-container">
+            <h1 id="dynamic-text"></h1>
+        </div>
+        <div class="button-container">
+            <a href="/login">Login</a>
       <a href="/register">Register</a>
+        </div>
     </div>
-  </body>
+    <div class="admin-button-container">
+        <a href="/admin" class="button">Admin Page</a>
+    </div>
+    <script src="/js/index.js"></script>
+</body>
 </html>
