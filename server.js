@@ -5,7 +5,7 @@ const app = express();
 const PORT = 3010;
 
 // Middleware
-app.use(express.static(__dirname));
+app.use('/css', express.static(path.join(__dirname, 'css'))); // Serve CSS folder
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
