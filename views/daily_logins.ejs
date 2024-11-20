@@ -5,36 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <link rel="stylesheet" href="/css/styles.css">
   <title>Daily Logins</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    h2 {
+      margin-top: 40px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Daily Logins</h1>
+  <h1>Grouped Daily Logins</h1>
 
-  <!-- Form to select a date -->
-  <form action="/admin/daily-logins" method="GET">
-    <label for="date">Select Date:</label>
-    <input type="date" id="date" name="date" value="<%= new Date().toISOString().split('T')[0] %>">
-    <button type="submit">View Logins</button>
-  </form>
-
-  <% if (logins && logins.length > 0) { %>
-    <table>
-      <thead>
-        <tr>
-          <th>Username</th>
-          <th>Time</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% logins.forEach(login => { %>
+  <% if (Object.keys(groupedLogins).length > 0) { %>
+    <% Object.entries(groupedLogins).forEach(([date, logins]) => { %>
+      <h2><%= date %></h2>
+      <table>
+        <thead>
           <tr>
-            <td><%= login.username %></td>
-            <td><%= new Date(login.time).toLocaleString() %></td> <!-- Format for readability -->
+            <th>Username</th>
+            <th>Time</th>
           </tr>
-        <% }) %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% logins.forEach(login => { %>
+            <tr>
+              <td><%= login.username %></td>
+              <td><%= new Date(login.time).toLocaleString() %></td> <!-- Format time -->
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% }) %>
   <% } else { %>
-    <p>No logins found for this date.</p>
+    <p>No login records available.</p>
   <% } %>
 </body>
 </html>
