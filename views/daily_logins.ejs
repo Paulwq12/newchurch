@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Logins</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Daily Logins</h1>
+  </header>
+  <main>
+    <form action="/admin/logins" method="POST">
+      <div class="form-group">
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" name="date" required>
+      </div>
+      <button type="submit">View Logins</button>
+    </form>
+    <% if (logins && logins.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% logins.forEach(login => { %>
+            <tr>
+              <td><%= login.username %></td>
+              <td><%= login.time %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else if (logins) { %>
+      <p>No logins found for this date.</p>
+    <% } %>
+  </main>
+</body>
+</html>

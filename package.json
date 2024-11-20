@@ -1,0 +1,23 @@
+{
+    "name": "church-attendance-system",
+    "version": "1.0.0",
+    "description": "An attendance tracking system for a church department",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "keywords": [
+      "attendance",
+      "system",
+      "church",
+      "tracking"
+    ],
+    "author": "Musa Deborah",
+    "license": "MIT",
+    "dependencies": {
+      "ejs": "^3.1.9",
+      "express": "^4.18.2"
+    },
+    "devDependencies": {}
+  }
+  

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Approve Users</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Approve Users</h1>
+  </header>
+  <main>
+    <% if (users && users.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Approved</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(user => { %>
+            <tr>
+              <td><%= user.username %></td>
+              <td><%= user.approved ? "Yes" : "No" %></td>
+              <td>
+                <% if (!user.approved) { %>
+                  <form action="/admin/approve" method="POST" style="display:inline;">
+                    <input type="hidden" name="username" value="<%= user.username %>">
+                    <button type="submit">Approve</button>
+                  </form>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No users awaiting approval.</p>
+    <% } %>
+  </main>
+</body>
+</html>
