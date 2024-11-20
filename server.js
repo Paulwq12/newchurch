@@ -41,7 +41,11 @@ app.post('/login', (req, res) => {
   }
 
   const attendance = loadJSON(attendancePath);
-  attendance.push({ username, time: new Date().toLocaleString() });
+  // Standardize date format for logging
+  attendance.push({
+    username,
+    time: new Date().toISOString() // Saves as "YYYY-MM-DDTHH:MM:SSZ"
+  });
   saveJSON(attendancePath, attendance);
 
   res.send(`Welcome, ${username}!`);
@@ -72,10 +76,14 @@ app.get('/admin/view-users', (req, res) => {
 
 app.get('/admin/daily-logins', (req, res) => {
   const attendance = loadJSON(attendancePath);
-  const date = req.query.date || new Date().toISOString().split('T')[0];
+  const date = req.query.date || new Date().toISOString().split('T')[0]; // Use "YYYY-MM-DD"
+
+  // Match only the date portion of the time
   const logins = attendance.filter((log) => log.time.startsWith(date));
+
   res.render('daily_logins', { logins });
 });
+
 
 app.get('/admin/approve-users', (req, res) => {
   const users = loadJSON(usersPath).filter((u) => !u.approved);
