@@ -3,41 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="/css/styles.css">
   <title>Daily Logins</title>
-  <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  <header>
-    <h1>Daily Logins</h1>
-  </header>
-  <main>
-    <form action="/admin/daily-logins" method="GET">
-      <div class="form-group">
-        <label for="date">Select Date:</label>
-        <input type="date" id="date" name="date" required>
-      </div>
-      <button type="submit">View Logins</button>
-    </form>
-    <% if (logins && logins.length > 0) { %>
-      <table>
-        <thead>
+  <h1>Daily Logins</h1>
+
+  <!-- Form to select a date -->
+  <form action="/admin/daily-logins" method="GET">
+    <label for="date">Select Date:</label>
+    <input type="date" id="date" name="date" value="<%= new Date().toISOString().split('T')[0] %>">
+    <button type="submit">View Logins</button>
+  </form>
+
+  <% if (logins && logins.length > 0) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% logins.forEach(login => { %>
           <tr>
-            <th>Username</th>
-            <th>Time</th>
+            <td><%= login.username %></td>
+            <td><%= new Date(login.time).toLocaleString() %></td> <!-- Format for readability -->
           </tr>
-        </thead>
-        <tbody>
-          <% logins.forEach(login => { %>
-            <tr>
-              <td><%= login.username %></td>
-              <td><%= login.time %></td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    <% } else if (logins) { %>
-      <p>No logins found for this date.</p>
-    <% } %>
-  </main>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No logins found for this date.</p>
+  <% } %>
 </body>
 </html>
