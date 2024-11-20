@@ -7,6 +7,8 @@ const PORT = 3010;
 // Middleware
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from public directory
 app.use(express.urlencoded({ extended: true }));
+app.use('/css', express.static(__path + '/css'));
+app.use('/js', express.static(__path + '/js'));
 
 // Data files
 const usersPath = path.join(__dirname, 'data', 'users.json');
