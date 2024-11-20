@@ -76,13 +76,21 @@ app.get('/admin/view-users', (req, res) => {
 
 app.get('/admin/daily-logins', (req, res) => {
   const attendance = loadJSON(attendancePath);
-  const date = req.query.date || new Date().toISOString().split('T')[0]; // Use "YYYY-MM-DD"
 
-  // Match only the date portion of the time
-  const logins = attendance.filter((log) => log.time.startsWith(date));
+  // Group logins by date
+  const groupedLogins = attendance.reduce((acc, log) => {
+    const date = log.time.split('T')[0]; // Extract the date part (YYYY-MM-DD)
+    if (!acc[date]) {
+      acc[date] = []; // Initialize the array for the date
+    }
+    acc[date].push(log);
+    return acc;
+  }, {});
 
-  res.render('daily_logins', { logins });
+  // Render the page with grouped data
+  res.render('daily_logins', { groupedLogins });
 });
+
 
 
 app.get('/admin/approve-users', (req, res) => {
