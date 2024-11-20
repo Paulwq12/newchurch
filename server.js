@@ -76,20 +76,27 @@ app.get('/admin/view-users', (req, res) => {
 
 app.get('/admin/daily-logins', (req, res) => {
   const attendance = loadJSON(attendancePath);
-
-  // Group logins by date
   const groupedLogins = attendance.reduce((acc, log) => {
-    const date = log.time.split('T')[0]; // Extract the date part (YYYY-MM-DD)
-    if (!acc[date]) {
-      acc[date] = []; // Initialize the array for the date
+    const logDate = new Date(log.time); // Convert time string to Date object
+    const dayOfWeek = logDate.toLocaleString('en-US', { weekday: 'long' }); // Get day of the week (e.g., Monday, Tuesday)
+    const date = logDate.toISOString().split('T')[0]; // Get the date (YYYY-MM-DD)
+
+    if (!acc[dayOfWeek]) {
+      acc[dayOfWeek] = {}; // Initialize day if not yet
     }
-    acc[date].push(log);
+
+    if (!acc[dayOfWeek][date]) {
+      acc[dayOfWeek][date] = []; // Initialize date if not yet for the specific day
+    }
+
+    acc[dayOfWeek][date].push(log); // Add log to the respective day and date
+
     return acc;
   }, {});
 
-  // Render the page with grouped data
   res.render('daily_logins', { groupedLogins });
 });
+
 
 
 
