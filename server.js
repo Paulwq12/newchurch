@@ -5,10 +5,9 @@ const app = express();
 const PORT = 3010;
 
 // Middleware
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from public directory
+app.use(express.static(__dirname));
 app.use(express.urlencoded({ extended: true }));
-app.use('/css', express.static(__path + '/css'));
-app.use('/js', express.static(__path + '/js'));
+app.set('view engine', 'ejs');
 
 // Data files
 const usersPath = path.join(__dirname, 'data', 'users.json');
@@ -19,9 +18,9 @@ const loadJSON = (filePath) => JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 const saveJSON = (filePath, data) => fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 
 // Routes
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'views', 'index.html')));
+app.get('/', (req, res) => res.render('index'));
 
-app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'views', 'login.html')));
+app.get('/login', (req, res) => res.render('login'));
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -48,7 +47,7 @@ app.post('/login', (req, res) => {
   res.send(`Welcome, ${username}!`);
 });
 
-app.get('/register', (req, res) => res.sendFile(path.join(__dirname, 'views', 'register.html')));
+app.get('/register', (req, res) => res.render('register'));
 
 app.post('/register', (req, res) => {
   const { username, password } = req.body;
@@ -64,23 +63,23 @@ app.post('/register', (req, res) => {
   res.send("Registration successful. Wait for admin approval.");
 });
 
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'views', 'admin.html')));
+app.get('/admin', (req, res) => res.render('admin'));
 
 app.get('/admin/view-users', (req, res) => {
   const users = loadJSON(usersPath);
-  res.json(users); // You can format the response in HTML or JSON
+  res.render('view_users', { users });
 });
 
 app.get('/admin/daily-logins', (req, res) => {
   const attendance = loadJSON(attendancePath);
   const date = req.query.date || new Date().toISOString().split('T')[0];
   const logins = attendance.filter((log) => log.time.startsWith(date));
-  res.json(logins); // You can format the response in HTML or JSON
+  res.render('daily_logins', { logins });
 });
 
 app.get('/admin/approve-users', (req, res) => {
   const users = loadJSON(usersPath).filter((u) => !u.approved);
-  res.json(users); // You can format the response in HTML or JSON
+  res.render('approve_users', { users });
 });
 
 app.post('/admin/approve', (req, res) => {
