@@ -76,26 +76,39 @@ app.get('/admin/view-users', (req, res) => {
 
 app.get('/admin/daily-logins', (req, res) => {
   const attendance = loadJSON(attendancePath);
+  const dateParam = req.query.date; // Get the selected date
   const groupedLogins = attendance.reduce((acc, log) => {
-    const logDate = new Date(log.time); // Convert time string to Date object
-    const dayOfWeek = logDate.toLocaleString('en-US', { weekday: 'long' }); // Get day of the week (e.g., Monday, Tuesday)
-    const date = logDate.toISOString().split('T')[0]; // Get the date (YYYY-MM-DD)
+    const logDate = new Date(log.time);
+    const dayOfWeek = logDate.toLocaleString('en-US', { weekday: 'long' });
+    const date = logDate.toISOString().split('T')[0];
 
     if (!acc[dayOfWeek]) {
-      acc[dayOfWeek] = {}; // Initialize day if not yet
+      acc[dayOfWeek] = {};
     }
 
     if (!acc[dayOfWeek][date]) {
-      acc[dayOfWeek][date] = []; // Initialize date if not yet for the specific day
+      acc[dayOfWeek][date] = [];
     }
 
-    acc[dayOfWeek][date].push(log); // Add log to the respective day and date
+    acc[dayOfWeek][date].push(log);
 
     return acc;
   }, {});
 
+  // If a specific date is provided, filter the logins by that date
+  if (dateParam) {
+    Object.keys(groupedLogins).forEach(day => {
+      Object.keys(groupedLogins[day]).forEach(date => {
+        if (date !== dateParam) {
+          delete groupedLogins[day][date]; // Remove other dates
+        }
+      });
+    });
+  }
+
   res.render('daily_logins', { groupedLogins });
 });
+
 
 
 
@@ -115,6 +128,17 @@ app.post('/admin/approve', (req, res) => {
   saveJSON(usersPath, users);
   res.redirect('/admin/approve-users');
 });
+// remove users
+app.post('/admin/remove-user', (req, res) => {
+  const { username } = req.body;
+  const users = loadJSON(usersPath);
+
+  const updatedUsers = users.filter((u) => u.username !== username);
+  saveJSON(usersPath, updatedUsers);
+
+  res.redirect('/admin/view-users');
+});
+
 
 // Start server
 app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
