@@ -1,6 +1,7 @@
 const texts = [
-    "Welcome to Paul Website",
-    "Click Login or Register to continue"
+    "Tribe of Judah Media department Attendance list",
+    "Click Login to take your attendance",
+     "Click register if you are a new member"
 ];
 
 let currentTextIndex = 0;
