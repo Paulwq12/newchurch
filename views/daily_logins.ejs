@@ -3,55 +3,99 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="stylesheet" href="/css/styles.css">
-  <title>Daily Logins</title>
+  <title>Grouped Daily Logins</title>
+  <link rel="stylesheet" href="/css/styles.css">
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
+      background-color: #f4f7fa;
     }
-    table {
-      border-collapse: collapse;
-      width: 100%;
+    header, h1 {
+      text-align: center;
+      color: #2c3e50;
       margin-bottom: 20px;
     }
-    th, td {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
       border: 1px solid #ddd;
-      padding: 8px;
+      background-color: white;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
     }
     th {
-      background-color: #f4f4f4;
+      background-color: #2980b9;
+      color: white;
     }
     h2 {
-      margin-top: 40px;
+      color: #2980b9;
+      margin-top: 20px;
+    }
+    form {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input[type="date"] {
+      padding: 5px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #2980b9;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #3498db;
     }
   </style>
 </head>
 <body>
-  <h1>Grouped Daily Logins</h1>
+  <header>
+    <h1>Grouped Daily Logins</h1>
+  </header>
+
+  <form action="/admin/daily-logins" method="GET">
+    <div>
+      <label for="date">Select Date:</label>
+      <input type="date" id="date" name="date">
+      <button type="submit">Filter by Date</button>
+    </div>
+  </form>
 
   <% if (Object.keys(groupedLogins).length > 0) { %>
-    <% Object.entries(groupedLogins).forEach(([date, logins]) => { %>
-      <h2><%= date %></h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% logins.forEach(login => { %>
+    <% Object.keys(groupedLogins).forEach(day => { %>
+      <h2><%= day %></h2>
+      
+      <% Object.keys(groupedLogins[day]).forEach(date => { %>
+        <h3><%= date %></h3>
+        <table>
+          <thead>
             <tr>
-              <td><%= login.username %></td>
-              <td><%= new Date(login.time).toLocaleString() %></td> <!-- Format time -->
+              <th>Username</th>
+              <th>Time</th>
             </tr>
-          <% }) %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <% groupedLogins[day][date].forEach(login => { %>
+              <tr>
+                <td><%= login.username %></td>
+                <td><%= login.time %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% }) %>
     <% }) %>
   <% } else { %>
-    <p>No login records available.</p>
+    <p style="text-align: center; color: #e74c3c;">No logins found for the selected date.</p>
   <% } %>
+
 </body>
 </html>
